@@ -16,7 +16,11 @@ and stub functionality for trade uploads and backtesting.
 - **broker_upload.py** – Stub implementation for uploading trades to a broker's
   API.
 - **backtesting_agent.py** – Contains a minimal example backtesting function that
-  calculates a buy-and-hold return.
+  calculates a buy-and-hold return and stores results per strategy.
+- **trading_db.py** – Defines tables for trading rules, strategies and backtest
+  records.
+- **gui.py** – Streamlit application for managing rules, strategies, and running
+  backtests using OpenBB price data.
 
 These scripts establish a basic framework for connecting to databases, managing
 those connections, previewing fetched data, and preparing for trade execution

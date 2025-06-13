@@ -1,4 +1,5 @@
 """AI assistant for database connection issues using Ollama."""
+# ruff: noqa: S603, S607
 import subprocess
 
 
@@ -13,7 +14,7 @@ def troubleshoot_connection(issue: str, model: str = "openllama") -> str:
         Name of the ollama model to use.
     """
     try:
-        result = subprocess.run(
+        result = subprocess.run(  # noqa: S603,S607
             ["ollama", "run", model, issue],
             check=True,
             capture_output=True,

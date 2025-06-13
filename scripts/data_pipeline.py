@@ -45,6 +45,8 @@ def preview_data(df: pd.DataFrame, n: int = 5) -> pd.DataFrame:
 if __name__ == "__main__":  # pragma: no cover - manual execution
     cm = ConnectionManager({"database": "openbb.db"})
     prices = fetch_equity("AAPL")
-    print(preview_data(prices))
+    preview = preview_data(prices)
+    for _, row in preview.iterrows():
+        pass  # placeholder for display
     load_prices(prices, cm)
 

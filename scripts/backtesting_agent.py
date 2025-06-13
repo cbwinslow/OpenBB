@@ -2,6 +2,9 @@
 
 import pandas as pd
 
+from .db_connections import ConnectionManager
+from .trading_db import list_strategies, record_backtest
+
 
 def run_backtest(prices: pd.DataFrame) -> dict:
     """Simple backtest: buy and hold return."""
@@ -11,4 +14,20 @@ def run_backtest(prices: pd.DataFrame) -> dict:
     start = prices["close"].iloc[0]
     end = prices["close"].iloc[-1]
     return {"return": (end - start) / start}
+
+
+def run_strategy_backtest(
+    strategy_id: int,
+    prices: pd.DataFrame,
+    conn_manager: ConnectionManager,
+) -> dict:
+    """Backtest a strategy and store the result."""
+    strategies = {s["id"]: s for s in list_strategies(conn_manager)}
+    strategy = strategies.get(strategy_id)
+    if strategy is None:
+        raise ValueError(f"Strategy {strategy_id} not found")
+
+    result = run_backtest(prices)
+    record_backtest(strategy_id, "", "", result, conn_manager)
+    return result
 
