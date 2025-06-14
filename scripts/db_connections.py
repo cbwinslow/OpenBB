@@ -9,7 +9,7 @@ CONFIG_DIR.mkdir(exist_ok=True)
 
 def list_config_files() -> list[Path]:
     """Return a list of available connection configuration files."""
-    return [p for p in CONFIG_DIR.glob("*.json")]
+    return list(CONFIG_DIR.glob("*.json"))
 
 
 def load_config(name: str) -> dict:
