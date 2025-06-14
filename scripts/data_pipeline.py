@@ -13,7 +13,8 @@ CREATE TABLE IF NOT EXISTS prices (
     high REAL,
     low REAL,
     close REAL,
-    volume REAL
+    volume REAL,
+    UNIQUE(symbol, date)
 )
 """
 
