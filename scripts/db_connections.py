@@ -21,7 +21,22 @@ def load_config(name: str) -> dict:
         return json.load(f)
 
 
+Drop the manual `_conn` state and `close()` in favor of sqlite3’s built-in context manager. This halves the code and removes error-prone state. For example:
+
+```python
+from contextlib import contextmanager
+
 class ConnectionManager:
+    def __init__(self, config: Optional[dict] = None):
+        self.config = config or {}
+
+    @contextmanager
+    def connection(self, config: Optional[dict] = None) -> Iterator[sqlite3.Connection]:
+        cfg = config or self.config
+        db_path = cfg.get("database", "openbb.db")
+        # sqlite3.connect already cleans up on exit
+        with sqlite3.connect(db_path) as conn:
+            yield conn
     """Manage database connections."""
 
     def __init__(self, config: Optional[dict] = None):
