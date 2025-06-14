@@ -30,11 +30,17 @@ def fetch_equity(symbol: str, provider: str = "fmp") -> pd.DataFrame:
 
 
 def load_prices(df: pd.DataFrame, conn_manager: ConnectionManager) -> None:
+    """Load price data into the database with input validation."""
+    required_columns = ["symbol", "date", "open", "high", "low", "close", "volume"]
+    missing_columns = [col for col in required_columns if col not in df.columns]
+    if missing_columns:
+        raise ValueError(f"DataFrame missing required columns: {missing_columns}")
+    
     with conn_manager.context() as conn:
         conn.execute(CREATE_TABLE_SQL)
         conn.executemany(
             INSERT_SQL,
-            df[["symbol", "date", "open", "high", "low", "close", "volume"]].values.tolist(),
+            df[required_columns].values.tolist(),
         )
         conn.commit()
 
