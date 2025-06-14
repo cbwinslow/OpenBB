@@ -12,7 +12,8 @@ def run_backtest(prices: pd.DataFrame) -> dict:
         return {"return": 0.0}
 
     start = prices["close"].iloc[0]
-    end = prices["close"].iloc[-1]
+    if start == 0:
+        return {"return": float('inf') if end > 0 else 0.0}
     return {"return": (end - start) / start}
 
 
