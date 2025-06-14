@@ -29,6 +29,8 @@ def run_strategy_backtest(
         raise ValueError(f"Strategy {strategy_id} not found")
 
     result = run_backtest(prices)
-    record_backtest(strategy_id, "", "", result, conn_manager)
+    start_date = str(prices["date"].iloc[0]) if "date" in prices.columns else ""
+    end_date   = str(prices["date"].iloc[-1]) if "date" in prices.columns else ""
+    record_backtest(strategy_id, start_date, end_date, result, conn_manager)
     return result
 
