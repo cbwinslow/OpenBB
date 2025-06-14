@@ -33,7 +33,9 @@ CREATE TABLE IF NOT EXISTS backtests (
 
 
 def initialize_db(conn_manager: ConnectionManager) -> None:
-    """Create tables for trading rules and strategies."""
+    """
+    Initializes the database by creating tables for trading rules, strategies, and backtests if they do not exist.
+    """
     with conn_manager.context() as conn:
         conn.execute(CREATE_RULES_SQL)
         conn.execute(CREATE_STRATEGIES_SQL)
@@ -42,7 +44,16 @@ def initialize_db(conn_manager: ConnectionManager) -> None:
 
 
 def add_rule(name: str, definition: str, conn_manager: ConnectionManager) -> int:
-    """Insert a trading rule and return its ID."""
+    """
+    Inserts a new trading rule into the database and returns the rule's unique ID.
+    
+    Args:
+        name: The name of the trading rule.
+        definition: The definition or logic of the trading rule.
+    
+    Returns:
+        The ID of the newly inserted trading rule.
+    """
     with conn_manager.context() as conn:
         cur = conn.execute(
             "INSERT INTO rules (name, definition) VALUES (?, ?)",
@@ -53,14 +64,28 @@ def add_rule(name: str, definition: str, conn_manager: ConnectionManager) -> int
 
 
 def list_rules(conn_manager: ConnectionManager) -> List[dict]:
-    """Return all rules."""
+    """
+    Retrieves all trading rules from the database.
+    
+    Returns:
+        A list of dictionaries, each containing the 'id', 'name', and 'definition' of a rule.
+    """
     with conn_manager.context() as conn:
         cur = conn.execute("SELECT id, name, definition FROM rules")
         return [dict(row) for row in cur.fetchall()]
 
 
 def add_strategy(name: str, rule_ids: Sequence[int], conn_manager: ConnectionManager) -> int:
-    """Insert a strategy composed of rule IDs."""
+    """
+    Inserts a new strategy with the specified name and associated rule IDs into the database.
+    
+    Args:
+        name: The name of the strategy.
+        rule_ids: A sequence of rule IDs that define the strategy.
+    
+    Returns:
+        The ID of the newly created strategy.
+    """
     with conn_manager.context() as conn:
         cur = conn.execute(
             "INSERT INTO strategies (name, rule_ids) VALUES (?, ?)",
@@ -71,7 +96,13 @@ def add_strategy(name: str, rule_ids: Sequence[int], conn_manager: ConnectionMan
 
 
 def list_strategies(conn_manager: ConnectionManager) -> List[dict]:
-    """Return all strategies."""
+    """
+    Retrieves all strategies from the database.
+    
+    Each strategy includes its ID, name, and a list of associated rule IDs.
+    Returns:
+        A list of dictionaries, each containing 'id', 'name', and 'rule_ids' (as a list of integers).
+    """
     with conn_manager.context() as conn:
         cur = conn.execute("SELECT id, name, rule_ids FROM strategies")
         rows = cur.fetchall()
@@ -85,7 +116,18 @@ def record_backtest(
     result: Any,
     conn_manager: ConnectionManager,
 ) -> int:
-    """Record backtest results."""
+    """
+    Inserts a backtest record for a strategy with specified dates and result data.
+    
+    Args:
+        strategy_id: The ID of the strategy associated with the backtest.
+        start_date: The start date of the backtest period (ISO format).
+        end_date: The end date of the backtest period (ISO format).
+        result: The result data of the backtest, which will be JSON-encoded.
+    
+    Returns:
+        The ID of the newly created backtest record.
+    """
     with conn_manager.context() as conn:
         cur = conn.execute(
             "INSERT INTO backtests (strategy_id, start_date, end_date, result) VALUES (?, ?, ?, ?)",
@@ -96,7 +138,14 @@ def record_backtest(
 
 
 def list_backtests(conn_manager: ConnectionManager) -> List[dict]:
-    """Return all backtest records."""
+    """
+    Retrieves all backtest records from the database.
+    
+    Each record includes the backtest ID, associated strategy ID, start and end dates, and the decoded result data.
+    
+    Returns:
+        A list of dictionaries, each containing 'id', 'strategy_id', 'start_date', 'end_date', and 'result'.
+    """
     with conn_manager.context() as conn:
         cur = conn.execute(
             "SELECT id, strategy_id, start_date, end_date, result FROM backtests"

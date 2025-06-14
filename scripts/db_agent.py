@@ -4,14 +4,15 @@ import subprocess
 
 
 def troubleshoot_connection(issue: str, model: str = "openllama") -> str:
-    """Use Ollama to get help troubleshooting a connection issue.
-
-    Parameters
-    ----------
-    issue: str
-        Description of the connection problem.
-    model: str
-        Name of the ollama model to use.
+    """
+    Uses the Ollama tool to provide troubleshooting assistance for a database connection issue.
+    
+    Args:
+        issue: Description of the connection problem.
+        model: Optional; name of the Ollama model to use (default is "openllama").
+    
+    Returns:
+        The output from the Ollama tool if successful, or an error message if the command fails.
     """
     try:
         result = subprocess.run(  # noqa: S603,S607
