@@ -2,7 +2,10 @@
 import pandas as pd
 from openbb import obb
 
-from .db_connections import ConnectionManager
+# scripts/data_pipeline.py
+
+-from .db_connections import ConnectionManager
++from scripts.db_connections import ConnectionManager  # absolute import
 
 CREATE_TABLE_SQL = """
 CREATE TABLE IF NOT EXISTS prices (
