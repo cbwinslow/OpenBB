@@ -200,21 +200,49 @@ def test_safe_fromtimestamp_nonwindows_positive(monkeypatch):
 
 
 def test_filter_by_dates():
-    """Test filter_by_dates filters correctly."""
+    """Test filter_by_dates filters correctly and covers edge cases."""
     class MockData(Data):
         date: datetime
 
+    # Normal data
     data = [
         MockData(date=datetime(2024, 1, 1)),
         MockData(date=datetime(2024, 1, 3)),
         MockData(date=datetime(2024, 1, 5)),
     ]
 
+    # Standard filter
     filtered = filter_by_dates(
         data, start_date=date(2024, 1, 2), end_date=date(2024, 1, 4)
     )
     assert len(filtered) == 1
     assert filtered[0].date.date() == date(2024, 1, 3)
+
+    # Edge case: empty input
+    filtered_empty = filter_by_dates([], start_date=date(2024, 1, 1), end_date=date(2024, 1, 5))
+    assert filtered_empty == []
+
+    # Edge case: no matches
+    filtered_none = filter_by_dates(
+        data, start_date=date(2025, 1, 1), end_date=date(2025, 1, 5)
+    )
+    assert filtered_none == []
+
+    # Edge case: item on start boundary
+    filtered_start = filter_by_dates(
+        data, start_date=date(2024, 1, 1), end_date=date(2024, 1, 3)
+    )
+    assert len(filtered_start) == 2
+    assert filtered_start[0].date.date() == date(2024, 1, 1)
+    assert filtered_start[1].date.date() == date(2024, 1, 3)
+
+    # Edge case: item on end boundary
+    filtered_end = filter_by_dates(
+        data, start_date=date(2024, 1, 3), end_date=date(2024, 1, 5)
+    )
+    assert len(filtered_end) == 2
+    assert filtered_end[0].date.date() == date(2024, 1, 3)
+    assert filtered_end[1].date.date() == date(2024, 1, 5)
 
 
 def test_maybe_coroutine_and_run_async():
