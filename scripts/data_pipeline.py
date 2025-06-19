@@ -2,10 +2,7 @@
 import pandas as pd
 from openbb import obb
 
-# scripts/data_pipeline.py
 
--from .db_connections import ConnectionManager
-+from scripts.db_connections import ConnectionManager  # absolute import
 
 CREATE_TABLE_SQL = """
 CREATE TABLE IF NOT EXISTS prices (
@@ -16,8 +13,7 @@ CREATE TABLE IF NOT EXISTS prices (
     high REAL,
     low REAL,
     close REAL,
-    volume REAL,
-    UNIQUE(symbol, date)
+
 )
 """
 
@@ -33,17 +29,12 @@ def fetch_equity(symbol: str, provider: str = "fmp") -> pd.DataFrame:
 
 
 def load_prices(df: pd.DataFrame, conn_manager: ConnectionManager) -> None:
-    """Load price data into the database with input validation."""
-    required_columns = ["symbol", "date", "open", "high", "low", "close", "volume"]
-    missing_columns = [col for col in required_columns if col not in df.columns]
-    if missing_columns:
-        raise ValueError(f"DataFrame missing required columns: {missing_columns}")
-    
+
     with conn_manager.context() as conn:
         conn.execute(CREATE_TABLE_SQL)
         conn.executemany(
             INSERT_SQL,
-            df[required_columns].values.tolist(),
+
         )
         conn.commit()
 

@@ -12,8 +12,7 @@ def run_backtest(prices: pd.DataFrame) -> dict:
         return {"return": 0.0}
 
     start = prices["close"].iloc[0]
-    if start == 0:
-        return {"return": float('inf') if end > 0 else 0.0}
+
     return {"return": (end - start) / start}
 
 
@@ -29,8 +28,6 @@ def run_strategy_backtest(
         raise ValueError(f"Strategy {strategy_id} not found")
 
     result = run_backtest(prices)
-    start_date = str(prices["date"].iloc[0]) if "date" in prices.columns else ""
-    end_date   = str(prices["date"].iloc[-1]) if "date" in prices.columns else ""
-    record_backtest(strategy_id, start_date, end_date, result, conn_manager)
+
     return result
 

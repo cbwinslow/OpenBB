@@ -61,17 +61,6 @@ def list_rules(conn_manager: ConnectionManager) -> List[dict]:
 
 def add_strategy(name: str, rule_ids: Sequence[int], conn_manager: ConnectionManager) -> int:
     """Insert a strategy composed of rule IDs."""
-    # Verify all rule IDs exist
-    with conn_manager.context() as conn:
-        qs = ",".join("?" * len(rule_ids))
-        cur = conn.execute(
-            f"SELECT id FROM rules WHERE id IN ({qs})",
-            tuple(rule_ids),
-        )
-        found_ids = {row["id"] for row in cur.fetchall()}
-        missing = set(rule_ids) - found_ids
-        if missing:
-            raise ValueError(f"Unknown rule IDs: {sorted(missing)}")
 
     with conn_manager.context() as conn:
         cur = conn.execute(
