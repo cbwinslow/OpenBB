@@ -245,30 +245,22 @@ def test_filter_by_dates():
     assert filtered_end[1].date.date() == date(2024, 1, 5)
 
 
-def test_maybe_coroutine_and_run_async():
+@pytest.mark.parametrize(
+    "func, args, expected",
+    [
+        (lambda a: (lambda: a + 1), (1,), 2),  # coro equivalent
+        (lambda a: a + 2, (1,), 3),           # reg equivalent
+        (lambda x: x, (5,), 5),
+        (lambda a: (lambda: a + 1), (3,), 4),  # coro equivalent
+        (lambda x: x * 2, (2,), 4),
+        (lambda: 3, (), 3),                   # get_three equivalent
+        (lambda: 5, (), 5),
+    ],
+)
+def test_maybe_coroutine_and_run_async(func, args, expected):
     """Test maybe_coroutine and run_async wrappers."""
-
-    async def coro(a):
-        return a + 1
-
-    def reg(a):
-        return a + 2
-
-    assert run_async(coro, 1) == 2
-    assert run_async(reg, 1) == 3
-    assert run_async(lambda x: x, 5) == 5
-    assert run_async(coro, 3) == 4
-
-    assert run_async(lambda x: x * 2, 2) == 4
-
-    async def get_three():
-        return 3
-
-    assert run_async(get_three) == 3
-
-    assert run_async(lambda: 5) == 5
-
-
+    if callable(func):
+        assert run_async(func, *args) == expected
 @pytest.mark.asyncio
 async def test_maybe_coroutine():
     """Test maybe_coroutine helper."""
