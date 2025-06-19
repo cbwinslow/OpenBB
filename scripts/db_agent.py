@@ -21,6 +21,6 @@ def troubleshoot_connection(issue: str, model: str = "openllama") -> str:
             text=True,
         )
         return result.stdout
-    except Exception as err:  # pragma: no cover - external dependency
+
         return f"Failed to run ollama: {err}"
 

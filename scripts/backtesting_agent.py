@@ -12,7 +12,7 @@ def run_backtest(prices: pd.DataFrame) -> dict:
         return {"return": 0.0}
 
     start = prices["close"].iloc[0]
-    end = prices["close"].iloc[-1]
+
     return {"return": (end - start) / start}
 
 
@@ -28,6 +28,6 @@ def run_strategy_backtest(
         raise ValueError(f"Strategy {strategy_id} not found")
 
     result = run_backtest(prices)
-    record_backtest(strategy_id, "", "", result, conn_manager)
+
     return result
 

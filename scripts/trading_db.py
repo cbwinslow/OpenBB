@@ -61,6 +61,7 @@ def list_rules(conn_manager: ConnectionManager) -> List[dict]:
 
 def add_strategy(name: str, rule_ids: Sequence[int], conn_manager: ConnectionManager) -> int:
     """Insert a strategy composed of rule IDs."""
+
     with conn_manager.context() as conn:
         cur = conn.execute(
             "INSERT INTO strategies (name, rule_ids) VALUES (?, ?)",

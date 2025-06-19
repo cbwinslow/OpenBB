@@ -2,7 +2,7 @@
 import pandas as pd
 from openbb import obb
 
-from .db_connections import ConnectionManager
+
 
 CREATE_TABLE_SQL = """
 CREATE TABLE IF NOT EXISTS prices (
@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS prices (
     high REAL,
     low REAL,
     close REAL,
-    volume REAL
+
 )
 """
 
@@ -29,11 +29,12 @@ def fetch_equity(symbol: str, provider: str = "fmp") -> pd.DataFrame:
 
 
 def load_prices(df: pd.DataFrame, conn_manager: ConnectionManager) -> None:
+
     with conn_manager.context() as conn:
         conn.execute(CREATE_TABLE_SQL)
         conn.executemany(
             INSERT_SQL,
-            df[["symbol", "date", "open", "high", "low", "close", "volume"]].values.tolist(),
+
         )
         conn.commit()
 
