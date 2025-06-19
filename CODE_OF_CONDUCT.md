@@ -1,5 +1,7 @@
 # Citizen Code of Conduct
 
+Welcome to the OpenBB community! This document helps keep our spaces open and safe for everyone.
+
 ## 1. Purpose
 
 A primary goal of OpenBB Terminal is to be inclusive to the largest number of contributors, with the most varied and diverse backgrounds possible. As such, we are committed to providing a friendly, safe and welcoming environment for all, regardless of gender, sexual orientation, ability, ethnicity, socioeconomic status, and religion (or lack thereof).
@@ -53,7 +55,8 @@ If a community member engages in unacceptable behavior, the community organizers
 
 ## 7. Reporting Guidelines
 
-If you are subject to or witness unacceptable behavior, or have any other concerns, please notify a community organizer as soon as possible. dro.lopes@campus.fct.unl.pt.
+If you are subject to or witness unacceptable behavior, or have any other concerns, please notify a community organizer as soon as possible. support@openbb.co.
+For Code of Conduct violations, email support@openbb.co with "Code of Conduct" in the subject line.
 
 [Reporting guidelines](https://github.com/OpenBB-finance/OpenBB)
 
@@ -71,7 +74,8 @@ This code of conduct and its related procedures also applies to unacceptable beh
 
 ## 10. Contact info
 
-dro.lopes@campus.fct.unl.pt
+support@openbb.co
+For Code of Conduct violations, email support@openbb.co with "Code of Conduct" in the subject line.
 
 ## 11. License and attribution
 
