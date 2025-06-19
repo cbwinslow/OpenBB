@@ -155,7 +155,7 @@ async def test_amake_requests(monkeypatch):
 
 
 def test_combine_certificates(tmp_path):
-    """Test combine_certificates creates a file."""
+    """Test combine_certificates creates a file and contains both certificates in order."""
     cert_file = tmp_path / "cert.pem"
     bundle_file = tmp_path / "bundle.pem"
     cert_content = "-----BEGIN CERTIFICATE-----\nMIID...\n-----END CERTIFICATE-----\n"
@@ -165,6 +165,13 @@ def test_combine_certificates(tmp_path):
 
     combined = combine_certificates(str(cert_file), str(bundle_file))
     assert os.path.isfile(combined)
+
+    # Assert the contents of the combined file
+    combined_content = open(combined, "r").read()
+    assert cert_content in combined_content
+    assert bundle_content in combined_content
+    # Assert order: cert_content comes before bundle_content
+    assert combined_content.index(cert_content) < combined_content.index(bundle_content)
 
 
 def test_safe_fromtimestamp(monkeypatch):
