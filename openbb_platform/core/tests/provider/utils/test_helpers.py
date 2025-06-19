@@ -174,11 +174,29 @@ def test_combine_certificates(tmp_path):
     assert combined_content.index(cert_content) < combined_content.index(bundle_content)
 
 
-def test_safe_fromtimestamp(monkeypatch):
+def test_safe_fromtimestamp_windows_negative(monkeypatch):
     """Test safe_fromtimestamp handles negatives on Windows."""
     monkeypatch.setattr(helpers, "os", SimpleNamespace(name="nt"))
     result = safe_fromtimestamp(-1)
     assert result == datetime(1970, 1, 1) + timedelta(seconds=-1)
+
+def test_safe_fromtimestamp_nonwindows_negative(monkeypatch):
+    """Test safe_fromtimestamp handles negatives on non-Windows platforms."""
+    monkeypatch.setattr(helpers, "os", SimpleNamespace(name="posix"))
+    result = safe_fromtimestamp(-1)
+    assert result == datetime(1970, 1, 1) + timedelta(seconds=-1)
+
+def test_safe_fromtimestamp_windows_positive(monkeypatch):
+    """Test safe_fromtimestamp handles positive timestamps on Windows."""
+    monkeypatch.setattr(helpers, "os", SimpleNamespace(name="nt"))
+    result = safe_fromtimestamp(1000)
+    assert result == datetime(1970, 1, 1) + timedelta(seconds=1000)
+
+def test_safe_fromtimestamp_nonwindows_positive(monkeypatch):
+    """Test safe_fromtimestamp handles positive timestamps on non-Windows platforms."""
+    monkeypatch.setattr(helpers, "os", SimpleNamespace(name="posix"))
+    result = safe_fromtimestamp(1000)
+    assert result == datetime(1970, 1, 1) + timedelta(seconds=1000)
 
 
 def test_filter_by_dates():
