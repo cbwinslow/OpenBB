@@ -1,0 +1,12 @@
+"""Stub for uploading trades to a broker API."""
+import logging
+from typing import Iterable
+
+logger = logging.getLogger(__name__)
+
+
+def upload_trades(trades: Iterable[dict]) -> None:
+    """Upload trades to a broker. This is a stub implementation."""
+    logger.info("Uploading %d trades", sum(1 for _ in trades))
+    # TODO: integrate with broker SDK/API
+
