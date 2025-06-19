@@ -55,11 +55,8 @@ If a community member engages in unacceptable behavior, the community organizers
 
 ## 7. Reporting Guidelines
 
-If you are subject to or witness unacceptable behavior, or have any other concerns, please notify a community organizer as soon as possible. support@openbb.co.
-For Code of Conduct violations, email support@openbb.co with "Code of Conduct" in the subject line.
-
-[Reporting guidelines](https://github.com/OpenBB-finance/OpenBB)
-
+If you are subject to or witness unacceptable behavior, or have any other concerns, please notify a community organizer as soon as possible by emailing support@openbb.co. 
+For Code of Conduct violations, email support@openbb.co with "Code of Conduct" in the subject line. Detailed reporting guidelines can be found [here](https://github.com/OpenBB-finance/OpenBB).
 Additionally, community organizers are available to help community members engage with local law enforcement or to otherwise help those experiencing unacceptable behavior feel safe. In the context of in-person events, organizers will also provide escorts as desired by the person experiencing distress.
 
 ## 8. Addressing Grievances
