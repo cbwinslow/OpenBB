@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Realtime Price Viewer</title>
+  <script>
+    async function fetchPrice() {
+      const symbol = document.getElementById('symbol').value;
+      const res = await fetch(`/realtime/${symbol}`);
+      const data = await res.json();
+      document.getElementById('price').textContent =
+        `Symbol: ${data.symbol} Price: ${data.price} Timestamp: ${data.timestamp}`;
+    }
+  </script>
+</head>
+<body>
+  <h1>Realtime Price Viewer</h1>
+  <input id="symbol" value="AAPL" />
+  <button onclick="fetchPrice()">Fetch Price</button>
+  <p id="price"></p>
+</body>
+</html>
