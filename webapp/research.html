@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Research Report Builder</title>
+  <script>
+    async function createReport() {
+      const topic = document.getElementById('topic').value;
+      const res = await fetch('/research/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ topic })
+      });
+      const data = await res.json();
+      document.getElementById('report').textContent = JSON.stringify(data, null, 2);
+    }
+  </script>
+</head>
+<body>
+  <h1>Research Report Builder</h1>
+  <input id="topic" placeholder="Enter topic" />
+  <button onclick="createReport()">Create Report</button>
+  <pre id="report"></pre>
+</body>
+</html>
