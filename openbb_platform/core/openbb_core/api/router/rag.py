@@ -22,12 +22,19 @@ embeddings = HuggingFaceEmbeddings(model_name=EMBED_MODEL)
 vector_db = Chroma(persist_directory=DB_DIR, embedding_function=embeddings)
 
 
-def load_docs(directory: str) -> List[Document]:
-    docs: List[Document] = []
-    for path in glob.glob(os.path.join(directory, "*.txt")):
-        with open(path, encoding="utf-8") as f:
-            docs.append(Document(page_content=f.read()))
-    return docs
++import logging
++
++
++def load_docs(directory: str) -> List[Document]:
++    logger = logging.getLogger(__name__)
++    docs: List[Document] = []
++    for path in glob.glob(os.path.join(directory, "*.txt")):
++        try:
++            with open(path, encoding="utf-8") as f:
++                docs.append(Document(page_content=f.read()))
++        except Exception as e:
++            logger.warning(f"Could not read file {path}: {e}")
++    return docs
 
 
 @router.post("/ingest")
