@@ -33,7 +33,7 @@ def load_docs(directory: str) -> List[Document]:
 @router.post("/ingest")
 def ingest() -> dict:
     """Ingest documents from the knowledge base directory."""
-    docs = load_docs("knowledge_base/docs")
+    docs = load_docs(KNOWLEDGE_BASE_DIR)
     splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
     chunks = splitter.split_documents(docs)
     if chunks:
