@@ -1,0 +1,1 @@
+OpenBB is an open-source investment research platform.
