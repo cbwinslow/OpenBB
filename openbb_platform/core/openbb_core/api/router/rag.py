@@ -22,25 +22,32 @@ embeddings = HuggingFaceEmbeddings(model_name=EMBED_MODEL)
 vector_db = Chroma(persist_directory=DB_DIR, embedding_function=embeddings)
 
 
-+import logging
-+
-+
-+def load_docs(directory: str) -> List[Document]:
-+    logger = logging.getLogger(__name__)
-+    docs: List[Document] = []
-+    for path in glob.glob(os.path.join(directory, "*.txt")):
-+        try:
-+            with open(path, encoding="utf-8") as f:
-+                docs.append(Document(page_content=f.read()))
-+        except Exception as e:
-+            logger.warning(f"Could not read file {path}: {e}")
-+    return docs
+def load_docs(directory: str) -> List[Document]:
+    """
+    Load all `.txt` files from a specified directory as LangChain Document objects.
+    
+    Parameters:
+    	directory (str): Path to the directory containing text files.
+    
+    Returns:
+    	List[Document]: A list of Document objects, each containing the content of a text file.
+    """
+    docs: List[Document] = []
+    for path in glob.glob(os.path.join(directory, "*.txt")):
+        with open(path, encoding="utf-8") as f:
+            docs.append(Document(page_content=f.read()))
+    return docs
 
 
 @router.post("/ingest")
 def ingest() -> dict:
-    """Ingest documents from the knowledge base directory."""
-    docs = load_docs(KNOWLEDGE_BASE_DIR)
+    """
+    Loads text documents from the knowledge base directory, splits them into chunks, adds them to the vector database, and persists the database.
+    
+    Returns:
+        dict: A dictionary with the number of ingested chunks under the key "ingested".
+    """
+    docs = load_docs("knowledge_base/docs")
     splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
     chunks = splitter.split_documents(docs)
     if chunks:
@@ -55,7 +62,15 @@ class Query(BaseModel):
 
 @router.post("/query")
 def query_rag(q: Query) -> dict:
-    """Query the knowledge base."""
+    """
+    Retrieve relevant information from the knowledge base in response to a user question.
+    
+    Parameters:
+    	q (Query): The query object containing the user's question.
+    
+    Returns:
+    	dict: A dictionary with the concatenated answer from the top three relevant documents and the total number of retrieved source documents.
+    """
     retriever = vector_db.as_retriever()
     results = retriever.get_relevant_documents(q.question)
     answer = " ".join(r.page_content for r in results[:3])
