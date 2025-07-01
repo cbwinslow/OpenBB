@@ -15,10 +15,21 @@ class ResearchService(metaclass=SingletonMeta):
     """Service orchestrating research report generation."""
 
     def __init__(self) -> None:
+        """
+        Initialize the ResearchService with an empty dictionary for storing research reports.
+        """
         self._reports: Dict[str, ResearchReport] = {}
 
     async def create_report(self, request: ResearchRequest) -> ResearchReport:
-        """Create a research report placeholder."""
+        """
+        Generate a new research report with a unique ID and a default summary section based on the provided request topic.
+        
+        Parameters:
+            request (ResearchRequest): The research request containing the topic for the report.
+        
+        Returns:
+            ResearchReport: The newly created research report instance.
+        """
         section = ResearchSection(
             title="Summary",
             content=f"Automated summary for {request.topic}",
@@ -34,5 +45,13 @@ class ResearchService(metaclass=SingletonMeta):
         return report
 
     async def get_report(self, report_id: str) -> ResearchReport | None:
-        """Retrieve a stored research report."""
+        """
+        Retrieve a research report by its unique ID.
+        
+        Parameters:
+            report_id (str): The unique identifier of the research report.
+        
+        Returns:
+            ResearchReport | None: The corresponding research report if found, otherwise None.
+        """
         return self._reports.get(report_id)
