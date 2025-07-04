@@ -35,6 +35,8 @@ If you are looking for our **FREE** AI-powered Research and Analytics Workspace,
 
 We also have an open source AI financial analyst agent that can access all of the data within OpenBB, and that repo can be found [here](https://github.com/OpenBB-finance/openbb-agents).
 
+The platform now includes a simple Knowledge Base with Retrieval-Augmented Generation (RAG) capabilities.  Documents can be ingested via `/rag/ingest` and queried using `/rag/query`.  A minimal web interface is available at [`rag.html`](webapp/rag.html).
+
 ---
 
 <!-- TABLE OF CONTENTS -->
