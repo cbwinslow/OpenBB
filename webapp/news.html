@@ -12,21 +12,30 @@
   </style>
   <script>
     async function fetchNews() {
-      const res = await fetch('/news/latest?limit=20');
-      const data = await res.json();
-      const tbody = document.getElementById('news-body');
-      tbody.innerHTML = '';
-      data.forEach(item => {
-        const row = document.createElement('tr');
-        const title = document.createElement('td');
-        title.className = 'title';
-        title.textContent = item.title;
-        const info = document.createElement('td');
-        info.textContent = `${item.source || ''} ${item.author || ''}`.trim();
-        row.appendChild(title);
-        row.appendChild(info);
-        tbody.appendChild(row);
-      });
+      try {
+        const res = await fetch('/news/latest?limit=20');
+        if (!res.ok) {
+          throw new Error(`Failed to fetch news: ${res.status} ${res.statusText}`);
+        }
+        const data = await res.json();
+        const tbody = document.getElementById('news-body');
+        tbody.innerHTML = '';
+        data.forEach(item => {
+          const row = document.createElement('tr');
+          const title = document.createElement('td');
+          title.className = 'title';
+          title.textContent = item.title;
+          const info = document.createElement('td');
+          info.textContent = `${item.source || ''} ${item.author || ''}`.trim();
+          row.appendChild(title);
+          row.appendChild(info);
+          tbody.appendChild(row);
+        });
+      } catch (error) {
+        const tbody = document.getElementById('news-body');
+        tbody.innerHTML = '<tr><td colspan="2">Failed to load news. Please try again later.</td></tr>';
+        console.error('Error fetching news:', error);
+      }
     }
 
     setInterval(fetchNews, 60000);
