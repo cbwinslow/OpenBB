@@ -9,8 +9,14 @@ from fastapi.staticfiles import StaticFiles
 from openbb_core.api.app_loader import AppLoader
 from openbb_core.api.router.commands import router as router_commands
 from openbb_core.api.router.coverage import router as router_coverage
-
+from openbb_core.api.router.historical_price import router as router_history
+from openbb_core.api.router.news import router as router_news
+from openbb_core.api.router.portfolio import router as router_portfolio
+from openbb_core.api.router.rag import router as router_rag
+from openbb_core.api.router.realtime_price import router as router_realtime
+from openbb_core.api.router.research import router as router_research
 from openbb_core.api.router.system import router as router_system
+from openbb_core.api.router.user import router as router_user
 from openbb_core.app.service.auth_service import AuthService
 from openbb_core.app.service.system_service import SystemService
 from openbb_core.env import Env
@@ -83,8 +89,13 @@ AppLoader.add_routers(
             router_coverage,
             router_commands,
             router_realtime,
-
-        )
+            router_history,
+            router_portfolio,
+            router_research,
+            router_rag,
+            router_news,
+            router_user,
+        ]
     ),
     prefix=system.api_settings.prefix,
 )

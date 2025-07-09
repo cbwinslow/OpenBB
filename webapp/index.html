@@ -2,21 +2,36 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Realtime Price Viewer</title>
-  <script>
-    async function fetchPrice() {
-      const symbol = document.getElementById('symbol').value;
-      const res = await fetch(`/realtime/${symbol}`);
-      const data = await res.json();
-      document.getElementById('price').textContent =
-        `Symbol: ${data.symbol} Price: ${data.price} Timestamp: ${data.timestamp}`;
-    }
-  </script>
+  <title>OpenBB Demo</title>
+  <style>
+    body { font-family: Arial, sans-serif; background:#f4f4f4; margin:0; padding:0; }
+    header { background:#003366; color:#fff; padding:10px 20px; }
+    h1 { margin:0; }
+    nav ul { list-style:none; padding:0; margin:0; display:flex; }
+    nav li { margin-right:15px; }
+    nav a { color:#fff; text-decoration:none; }
+    main { padding:20px; }
+    section { margin-bottom:20px; background:#fff; padding:15px; border-radius:4px; }
+  </style>
 </head>
 <body>
-  <h1>Realtime Price Viewer</h1>
-  <input id="symbol" value="AAPL" />
-  <button onclick="fetchPrice()">Fetch Price</button>
-  <p id="price"></p>
+  <header>
+    <h1>OpenBB Platform</h1>
+    <nav>
+      <ul>
+        <li><a href="realtime.html">Realtime Prices</a></li>
+        <li><a href="portfolio.html">Portfolio</a></li>
+        <li><a href="research.html">Research</a></li>
+        <li><a href="rag.html">Knowledge Base</a></li>
+        <li><a href="news.html">News</a></li>
+      </ul>
+    </nav>
+  </header>
+  <main>
+    <section>
+      <h2>Welcome</h2>
+      <p>This demo highlights several modules of the OpenBB Platform. Use the navigation links above to explore realtime quotes, research reports, knowledge base chat, and news aggregation. The Portfolio page introduces simple performance tracking and backtesting.</p>
+    </section>
+  </main>
 </body>
 </html>

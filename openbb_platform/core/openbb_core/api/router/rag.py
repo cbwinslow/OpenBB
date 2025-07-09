@@ -18,23 +18,24 @@ router = APIRouter(prefix="/rag", tags=["RAG"])
 DB_DIR = os.getenv("RAG_DB", "rag_db")
 EMBED_MODEL = os.getenv("EMBED_MODEL", "sentence-transformers/all-MiniLM-L6-v2")
 
+import logging
+
 embeddings = HuggingFaceEmbeddings(model_name=EMBED_MODEL)
 vector_db = Chroma(persist_directory=DB_DIR, embedding_function=embeddings)
 
+KNOWLEDGE_BASE_DIR = os.getenv("KNOWLEDGE_BASE_DIR", "knowledge_base/docs")
 
-+import logging
-+
-+
-+def load_docs(directory: str) -> List[Document]:
-+    logger = logging.getLogger(__name__)
-+    docs: List[Document] = []
-+    for path in glob.glob(os.path.join(directory, "*.txt")):
-+        try:
-+            with open(path, encoding="utf-8") as f:
-+                docs.append(Document(page_content=f.read()))
-+        except Exception as e:
-+            logger.warning(f"Could not read file {path}: {e}")
-+    return docs
+
+def load_docs(directory: str) -> List[Document]:
+    logger = logging.getLogger(__name__)
+    docs: List[Document] = []
+    for path in glob.glob(os.path.join(directory, "*.txt")):
+        try:
+            with open(path, encoding="utf-8") as f:
+                docs.append(Document(page_content=f.read()))
+        except Exception as exc:
+            logger.warning("Could not read file %s: %s", path, exc)
+    return docs
 
 
 @router.post("/ingest")
