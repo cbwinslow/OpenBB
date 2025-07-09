@@ -27,6 +27,17 @@ KNOWLEDGE_BASE_DIR = os.getenv("KNOWLEDGE_BASE_DIR", "knowledge_base/docs")
 
 
 def load_docs(directory: str) -> List[Document]:
+    """
+    Load all `.txt` files from the specified directory into a list of Document objects.
+    
+    Each file's content is read and stored as the `page_content` of a Document. Files that cannot be read are skipped with a warning.
+    
+    Parameters:
+        directory (str): Path to the directory containing `.txt` files.
+    
+    Returns:
+        List[Document]: List of Document objects containing the contents of each readable file.
+    """
     logger = logging.getLogger(__name__)
     docs: List[Document] = []
     for path in glob.glob(os.path.join(directory, "*.txt")):
