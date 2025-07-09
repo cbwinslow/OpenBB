@@ -1,3 +1,5 @@
+"""SQLite connection manager used by scripts."""
+
 import json
 import sqlite3
 from contextlib import contextmanager
@@ -7,13 +9,14 @@ from typing import Iterator, Optional
 CONFIG_DIR = Path(__file__).resolve().parent / "configs"
 CONFIG_DIR.mkdir(exist_ok=True)
 
-def list_config_files() -> list[Path]:
-    """Return a list of available connection configuration files."""
 
+def list_config_files() -> list[Path]:
+    """Return available connection configuration files."""
+    return list(CONFIG_DIR.glob("*.json"))
 
 
 def load_config(name: str) -> dict:
-    """Load a configuration file by name (without extension)."""
+    """Load a configuration file by name."""
     path = CONFIG_DIR / f"{name}.json"
     if not path.exists():
         raise FileNotFoundError(f"Config {name} not found")
@@ -21,30 +24,16 @@ def load_config(name: str) -> dict:
         return json.load(f)
 
 
+class ConnectionManager:
+    """Manage SQLite connections."""
 
-    """Manage database connections."""
-
-    def __init__(self, config: Optional[dict] = None):
+    def __init__(self, config: Optional[dict] = None) -> None:
         self.config = config or {}
-        self._conn: Optional[sqlite3.Connection] = None
-
-    def connect(self, config: Optional[dict] = None) -> sqlite3.Connection:
-        cfg = config or self.config
-        db_path = cfg.get("database", "openbb.db")
-        self._conn = sqlite3.connect(db_path)
-        self._conn.row_factory = sqlite3.Row
-        return self._conn
-
-    def close(self) -> None:
-        if self._conn:
-            self._conn.close()
-            self._conn = None
 
     @contextmanager
     def context(self, config: Optional[dict] = None) -> Iterator[sqlite3.Connection]:
-        conn = self.connect(config)
-        try:
+        cfg = config or self.config
+        db_path = cfg.get("database", "openbb.db")
+        with sqlite3.connect(db_path) as conn:
+            conn.row_factory = sqlite3.Row
             yield conn
-        finally:
-            self.close()
-
