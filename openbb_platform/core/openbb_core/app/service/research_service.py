@@ -15,10 +15,6 @@ class ResearchService(metaclass=SingletonMeta):
     """Service orchestrating research report generation."""
 
     def __init__(self) -> None:
-        """
-        Initialize the ResearchService with an empty dictionary for storing research reports.
-        """
-        self._reports: Dict[str, ResearchReport] = {}
 
     async def create_report(self, request: ResearchRequest) -> ResearchReport:
         """
