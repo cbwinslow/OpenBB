@@ -7,17 +7,7 @@ from .trading_db import list_strategies, record_backtest
 
 
 def run_backtest(prices: pd.DataFrame) -> dict:
-    """
-    Performs a simple buy-and-hold backtest on the provided price data.
-    
-    Calculates the total return as the percentage change from the first to the last closing price. Returns 0.0 if the input DataFrame is empty or the initial closing price is zero.
-    
-    Parameters:
-        prices (pd.DataFrame): DataFrame containing at least a "close" column with price data.
-    
-    Returns:
-        dict: Dictionary with the key "return" representing the total return as a float.
-    """
+
     if prices.empty:
         return {"return": 0.0}
 

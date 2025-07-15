@@ -18,7 +18,6 @@ router = APIRouter(prefix="/rag", tags=["RAG"])
 DB_DIR = os.getenv("RAG_DB", "rag_db")
 EMBED_MODEL = os.getenv("EMBED_MODEL", "sentence-transformers/all-MiniLM-L6-v2")
 
-
     return docs
 
 
