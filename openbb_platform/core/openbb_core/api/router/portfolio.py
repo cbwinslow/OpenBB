@@ -18,7 +18,7 @@ class PerformancePoint(BaseModel):
 
 @router.get("/performance", response_model=List[PerformancePoint])
 async def get_performance() -> List[PerformancePoint]:
-    """Return sample portfolio performance data."""
+
     today = date.today()
     data = [
         PerformancePoint(date=str(today - timedelta(days=i)), value=10000 + i * 10)

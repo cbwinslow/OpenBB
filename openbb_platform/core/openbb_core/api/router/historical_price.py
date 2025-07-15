@@ -54,7 +54,7 @@ async def get_history(
     start: Optional[str] = Query(None),
     end: Optional[str] = Query(None),
 ) -> List[PriceBar]:
-    """Fetch historical prices and store in the database."""
+
     df = yf.download(symbol, start=start, end=end, progress=False)
     df.reset_index(inplace=True)
     with Session(engine) as session:
