@@ -2,7 +2,16 @@
 
 
 def fetch_equity(symbol: str, provider: str = "fmp") -> pd.DataFrame:
-    """Fetch historical prices using the OpenBB SDK."""
+    """
+    Fetches historical price data for a given equity symbol using the OpenBB SDK.
+    
+    Parameters:
+        symbol (str): The ticker symbol of the equity to fetch.
+        provider (str): The data provider to use (default is "fmp").
+    
+    Returns:
+        pd.DataFrame: DataFrame containing historical price data for the specified symbol.
+    """
     data = obb.equity.price.historical(symbol=symbol, provider=provider)
     df = data.to_dataframe()
     df["symbol"] = symbol
@@ -10,7 +19,12 @@ def fetch_equity(symbol: str, provider: str = "fmp") -> pd.DataFrame:
 
 
 def load_prices(df: pd.DataFrame, conn_manager: ConnectionManager) -> None:
-    """Load price data into the database."""
+    """
+    Insert historical price data from a DataFrame into the SQLite database, creating the table if it does not exist.
+    
+    Parameters:
+        df (pd.DataFrame): DataFrame containing columns 'symbol', 'date', 'open', 'high', 'low', 'close', and 'volume'.
+    """
     with conn_manager.context() as conn:
         cur = conn.cursor()
         cur.executemany(
@@ -22,7 +36,15 @@ def load_prices(df: pd.DataFrame, conn_manager: ConnectionManager) -> None:
 
 
 def preview_data(df: pd.DataFrame, n: int = 5) -> pd.DataFrame:
-    """Return a sample of the data for quick inspection."""
+    """
+    Return the first `n` rows of the DataFrame for quick inspection.
+    
+    Parameters:
+        n (int): Number of rows to return from the top of the DataFrame. Defaults to 5.
+    
+    Returns:
+        pd.DataFrame: A DataFrame containing the first `n` rows.
+    """
     return df.head(n)
 
 

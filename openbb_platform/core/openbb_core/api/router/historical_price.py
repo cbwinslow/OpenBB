@@ -54,7 +54,19 @@ async def get_history(
     start: Optional[str] = Query(None),
     end: Optional[str] = Query(None),
 ) -> List[PriceBar]:
-    """Fetch historical prices and store in the database."""
+    """
+    Retrieve historical price data for a given financial symbol, update the local database, and return the stored records.
+    
+    Downloads historical price data for the specified symbol and optional date range, merges it into the database, and returns all stored price bars for the symbol ordered by most recent date.
+    
+    Parameters:
+        symbol (str): The financial symbol to retrieve historical prices for.
+        start (Optional[str]): The start date (YYYY-MM-DD) for the historical data range.
+        end (Optional[str]): The end date (YYYY-MM-DD) for the historical data range.
+    
+    Returns:
+        List[PriceBar]: A list of historical price bars for the symbol, ordered by descending date.
+    """
     df = yf.download(symbol, start=start, end=end, progress=False)
     df.reset_index(inplace=True)
     with Session(engine) as session:
