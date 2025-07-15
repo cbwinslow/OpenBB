@@ -8,6 +8,17 @@ from .trading_db import list_strategies, record_backtest
 
 def run_backtest(prices: pd.DataFrame) -> dict:
 
+    """
+    Calculate the total return of a price series as a percentage change between the first and last closing prices.
+    
+    If the input DataFrame is empty or the first closing price is zero, returns a return of 0.0.
+    
+    Parameters:
+        prices (pd.DataFrame): DataFrame containing a 'close' column with price data.
+    
+    Returns:
+        dict: Dictionary with the key "return" representing the calculated return as a float.
+    """
     if prices.empty:
         return {"return": 0.0}
 
