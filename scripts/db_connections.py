@@ -1,10 +1,12 @@
-"""SQLite connection manager used by scripts."""
+"""Connection manager for SQLite and PostgreSQL."""
 
 import json
 import sqlite3
 from contextlib import contextmanager
 from pathlib import Path
-from typing import Iterator, Optional
+from typing import Iterator, Optional, Union
+
+from .postgres_connection import PostgresConnectionManager
 
 CONFIG_DIR = Path(__file__).resolve().parent / "configs"
 CONFIG_DIR.mkdir(exist_ok=True)
@@ -24,7 +26,7 @@ def load_config(name: str) -> dict:
         return json.load(f)
 
 
-class ConnectionManager:
+class SQLiteConnectionManager:
     """Manage SQLite connections."""
 
     def __init__(self, config: Optional[dict] = None) -> None:
@@ -37,3 +39,16 @@ class ConnectionManager:
         with sqlite3.connect(db_path) as conn:
             conn.row_factory = sqlite3.Row
             yield conn
+
+
+def ConnectionManager(
+    config: Optional[dict] = None,
+) -> Union[SQLiteConnectionManager, PostgresConnectionManager]:
+    """Return a connection manager based on the config."""
+    config = config or {}
+    db_type = config.get("type", "sqlite")
+    if db_type == "sqlite":
+        return SQLiteConnectionManager(config)
+    if db_type == "postgres":
+        return PostgresConnectionManager(config)
+    raise ValueError(f"Unsupported database type: {db_type}")
