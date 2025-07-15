@@ -54,7 +54,19 @@ async def get_history(
     start: Optional[str] = Query(None),
     end: Optional[str] = Query(None),
 ) -> List[PriceBar]:
-    """Fetch historical prices and store in the database."""
+    """
+    Retrieve historical price data for a financial symbol, store it in the database, and return the stored records.
+    
+    Downloads historical price data for the specified symbol and optional date range from Yahoo Finance, updates the local database with the retrieved data, and returns all stored historical price records for the symbol in descending date order.
+    
+    Parameters:
+        symbol (str): The financial symbol to fetch historical prices for.
+        start (Optional[str]): The start date for the historical data range (YYYY-MM-DD). If not provided, retrieves all available data.
+        end (Optional[str]): The end date for the historical data range (YYYY-MM-DD). If not provided, retrieves data up to the most recent available.
+    
+    Returns:
+        List[PriceBar]: A list of historical price records for the symbol, ordered by date descending.
+    """
     df = yf.download(symbol, start=start, end=end, progress=False)
     df.reset_index(inplace=True)
     with Session(engine) as session:
