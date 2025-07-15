@@ -1,4 +1,4 @@
-"""Backtesting agent placeholder."""
+"""Simplistic backtesting utilities."""
 
 import pandas as pd
 
@@ -7,11 +7,24 @@ from .trading_db import list_strategies, record_backtest
 
 
 def run_backtest(prices: pd.DataFrame) -> dict:
-    """Simple backtest: buy and hold return."""
+    """
+    Performs a simple buy-and-hold backtest on the provided price data.
+    
+    Calculates the total return as the percentage change from the first to the last closing price. Returns 0.0 if the input DataFrame is empty or the initial closing price is zero.
+    
+    Parameters:
+        prices (pd.DataFrame): DataFrame containing at least a "close" column with price data.
+    
+    Returns:
+        dict: Dictionary with the key "return" representing the total return as a float.
+    """
     if prices.empty:
         return {"return": 0.0}
 
     start = prices["close"].iloc[0]
+    end = prices["close"].iloc[-1]
+    if start == 0:
+        return {"return": 0.0}
 
     return {"return": (end - start) / start}
 
@@ -21,13 +34,24 @@ def run_strategy_backtest(
     prices: pd.DataFrame,
     conn_manager: ConnectionManager,
 ) -> dict:
-    """Backtest a strategy and store the result."""
+    """
+    Executes a backtest for the specified strategy using provided price data and records the result in the database.
+    
+    Raises:
+        ValueError: If the strategy with the given ID does not exist.
+    
+    Returns:
+        dict: The result of the backtest, including the calculated return.
+    """
     strategies = {s["id"]: s for s in list_strategies(conn_manager)}
     strategy = strategies.get(strategy_id)
     if strategy is None:
         raise ValueError(f"Strategy {strategy_id} not found")
 
     result = run_backtest(prices)
-
+    start_date = str(prices["date"].iloc[0]) if "date" in prices.columns else ""
+    end_date = str(prices["date"].iloc[-1]) if "date" in prices.columns else ""
+    record_backtest(strategy_id, start_date, end_date, result, conn_manager)
     return result
+
 

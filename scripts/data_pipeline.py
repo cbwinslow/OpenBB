@@ -1,53 +1,54 @@
-"""Data pipeline to fetch prices and load into a database."""
-import pandas as pd
-from openbb import obb
 
-
-
-CREATE_TABLE_SQL = """
-CREATE TABLE IF NOT EXISTS prices (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    symbol TEXT NOT NULL,
-    date TEXT NOT NULL,
-    open REAL,
-    high REAL,
-    low REAL,
-    close REAL,
-
-)
-"""
-
-INSERT_SQL = """
-INSERT INTO prices (symbol, date, open, high, low, close, volume)
-VALUES (?, ?, ?, ?, ?, ?, ?)
-"""
 
 
 def fetch_equity(symbol: str, provider: str = "fmp") -> pd.DataFrame:
+    """
+    Fetches historical price data for a given equity symbol using the OpenBB SDK.
+    
+    Parameters:
+        symbol (str): The ticker symbol of the equity to fetch.
+        provider (str): The data provider to use (default is "fmp").
+    
+    Returns:
+        pd.DataFrame: DataFrame containing the historical price data for the specified symbol.
+    """
     data = obb.equity.price.historical(symbol=symbol, provider=provider)
-    return data.to_dataframe()
+    df = data.to_dataframe()
+    df["symbol"] = symbol
+    return df
 
 
 def load_prices(df: pd.DataFrame, conn_manager: ConnectionManager) -> None:
-
+    """
+    Insert historical price data from a DataFrame into the SQLite database, creating the table if it does not exist.
+    
+    The function ensures the `prices` table is present, then inserts or replaces records for each row in the DataFrame.
+    """
     with conn_manager.context() as conn:
-        conn.execute(CREATE_TABLE_SQL)
-        conn.executemany(
+        cur = conn.cursor()
+        cur.executemany(
             INSERT_SQL,
-
+            df[["symbol", "date", "open", "high", "low", "close", "volume"]].values.tolist(),
         )
         conn.commit()
+        cur.close()
 
 
 def preview_data(df: pd.DataFrame, n: int = 5) -> pd.DataFrame:
+    """
+    Return the first `n` rows of the DataFrame for preview.
+    
+    Parameters:
+        n (int): Number of rows to return from the top of the DataFrame. Defaults to 5.
+    
+    Returns:
+        pd.DataFrame: A DataFrame containing the first `n` rows.
+    """
     return df.head(n)
 
 
 if __name__ == "__main__":  # pragma: no cover - manual execution
-    cm = ConnectionManager({"database": "openbb.db"})
+    cm = ConnectionManager({"type": "postgres"})
     prices = fetch_equity("AAPL")
-    preview = preview_data(prices)
-    for _, row in preview.iterrows():
-        pass  # placeholder for display
+    print(preview_data(prices))
     load_prices(prices, cm)
-

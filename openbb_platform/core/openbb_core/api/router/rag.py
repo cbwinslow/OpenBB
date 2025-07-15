@@ -18,22 +18,14 @@ router = APIRouter(prefix="/rag", tags=["RAG"])
 DB_DIR = os.getenv("RAG_DB", "rag_db")
 EMBED_MODEL = os.getenv("EMBED_MODEL", "sentence-transformers/all-MiniLM-L6-v2")
 
-embeddings = HuggingFaceEmbeddings(model_name=EMBED_MODEL)
-vector_db = Chroma(persist_directory=DB_DIR, embedding_function=embeddings)
 
-
-def load_docs(directory: str) -> List[Document]:
-    docs: List[Document] = []
-    for path in glob.glob(os.path.join(directory, "*.txt")):
-        with open(path, encoding="utf-8") as f:
-            docs.append(Document(page_content=f.read()))
     return docs
 
 
 @router.post("/ingest")
 def ingest() -> dict:
     """Ingest documents from the knowledge base directory."""
-    docs = load_docs("knowledge_base/docs")
+
     splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
     chunks = splitter.split_documents(docs)
     if chunks:

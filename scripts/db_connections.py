@@ -1,19 +1,40 @@
+
+
 import json
 import sqlite3
 from contextlib import contextmanager
 from pathlib import Path
-from typing import Iterator, Optional
+from typing import Iterator, Optional, Union
+
+from .postgres_connection import PostgresConnectionManager
 
 CONFIG_DIR = Path(__file__).resolve().parent / "configs"
 CONFIG_DIR.mkdir(exist_ok=True)
 
-def list_config_files() -> list[Path]:
-    """Return a list of available connection configuration files."""
 
+def list_config_files() -> list[Path]:
+    """
+    Return a list of all JSON configuration files in the configuration directory.
+    
+    Returns:
+        List of Path objects representing available connection configuration files.
+    """
+    return list(CONFIG_DIR.glob("*.json"))
 
 
 def load_config(name: str) -> dict:
-    """Load a configuration file by name (without extension)."""
+    """
+    Load and return the contents of a JSON configuration file from the config directory.
+    
+    Parameters:
+        name (str): The base name of the configuration file (without `.json` extension).
+    
+    Returns:
+        dict: The parsed JSON content of the configuration file.
+    
+    Raises:
+        FileNotFoundError: If the specified configuration file does not exist.
+    """
     path = CONFIG_DIR / f"{name}.json"
     if not path.exists():
         raise FileNotFoundError(f"Config {name} not found")
@@ -22,29 +43,33 @@ def load_config(name: str) -> dict:
 
 
 
-    """Manage database connections."""
+    """Manage SQLite connections."""
 
-    def __init__(self, config: Optional[dict] = None):
+    def __init__(self, config: Optional[dict] = None) -> None:
+        """
+        Initialize a ConnectionManager with an optional configuration dictionary.
+        
+        Parameters:
+            config (Optional[dict]): SQLite connection configuration. If not provided, defaults to an empty dictionary.
+        """
         self.config = config or {}
-        self._conn: Optional[sqlite3.Connection] = None
-
-    def connect(self, config: Optional[dict] = None) -> sqlite3.Connection:
-        cfg = config or self.config
-        db_path = cfg.get("database", "openbb.db")
-        self._conn = sqlite3.connect(db_path)
-        self._conn.row_factory = sqlite3.Row
-        return self._conn
-
-    def close(self) -> None:
-        if self._conn:
-            self._conn.close()
-            self._conn = None
 
     @contextmanager
     def context(self, config: Optional[dict] = None) -> Iterator[sqlite3.Connection]:
-        conn = self.connect(config)
-        try:
+        """
+        Context manager that yields an SQLite connection using the provided or stored configuration.
+        
+        Opens a connection to the SQLite database specified in the configuration dictionary under the "database" key, defaulting to "openbb.db" if not set. The connection's row factory is set to allow row access by column name. The connection is automatically closed when the context is exited.
+        
+        Parameters:
+            config (Optional[dict]): Optional configuration dictionary specifying the database path.
+        
+        Yields:
+            sqlite3.Connection: An open SQLite connection with row factory set to sqlite3.Row.
+        """
+        cfg = config or self.config
+        db_path = cfg.get("database", "openbb.db")
+        with sqlite3.connect(db_path) as conn:
+            conn.row_factory = sqlite3.Row
             yield conn
-        finally:
-            self.close()
 
