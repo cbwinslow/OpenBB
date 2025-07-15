@@ -1,8 +1,14 @@
-
-
-
 def fetch_equity(symbol: str, provider: str = "fmp") -> pd.DataFrame:
-    """Fetch historical prices using the OpenBB SDK."""
+    """
+    Fetches historical equity price data for a given stock symbol using the specified data provider.
+    
+    Parameters:
+        symbol (str): The stock symbol to retrieve historical price data for.
+        provider (str, optional): The data provider to use. Defaults to "fmp".
+    
+    Returns:
+        pd.DataFrame: DataFrame containing historical price data with an added "symbol" column.
+    """
     data = obb.equity.price.historical(symbol=symbol, provider=provider)
     df = data.to_dataframe()
     df["symbol"] = symbol
