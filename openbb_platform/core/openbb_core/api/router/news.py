@@ -17,7 +17,12 @@ _cache: dict[str, tuple[float, list[dict]]] = {}
 
 
 def _credentials() -> dict:
-    """Return user credentials from settings."""
+    """
+    Retrieve the current user's credentials as a JSON-compatible dictionary.
+    
+    Returns:
+        dict: The user's credentials extracted from default user settings.
+    """
     return UserService().default_user_settings.credentials.model_dump(mode="json")
 
 
@@ -28,7 +33,17 @@ async def get_latest_news(
     limit: int = 10,
     _: None = Depends(auth_hook),
 ) -> List[dict]:
-    """Fetch latest news articles with simple caching."""
+    """
+    Retrieve the latest news articles, filtered by optional search term and source, with results cached for five minutes.
+    
+    Parameters:
+        term (str, optional): Search term to filter news articles.
+        source (str, optional): Specific news source to filter results.
+        limit (int): Maximum number of articles to return.
+    
+    Returns:
+        List[dict]: A list of news article dictionaries matching the specified filters.
+    """
     key = f"{term}-{source}-{limit}"
     ts, cached = _cache.get(key, (0.0, []))
     if time.time() - ts < 300 and cached:

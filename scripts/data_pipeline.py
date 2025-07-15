@@ -28,13 +28,26 @@ INSERT_SQL = (
 
 
 def fetch_equity(symbol: str, provider: str = "fmp") -> pd.DataFrame:
-    """Fetch historical prices using the OpenBB SDK."""
+    """
+    Fetches historical price data for a given equity symbol using the OpenBB SDK.
+    
+    Parameters:
+        symbol (str): The ticker symbol of the equity to fetch.
+        provider (str): The data provider to use (default is "fmp").
+    
+    Returns:
+        pd.DataFrame: DataFrame containing the historical price data for the specified symbol.
+    """
     data = obb.equity.price.historical(symbol=symbol, provider=provider)
     return data.to_dataframe()
 
 
 def load_prices(df: pd.DataFrame, conn_manager: ConnectionManager) -> None:
-    """Load price data into the database."""
+    """
+    Insert historical price data from a DataFrame into the SQLite database.
+    
+    Creates the `prices` table if it does not exist and inserts or replaces rows for each record in the DataFrame.
+    """
     with conn_manager.context() as conn:
         conn.execute(CREATE_TABLE_SQL)
         conn.executemany(
@@ -45,7 +58,15 @@ def load_prices(df: pd.DataFrame, conn_manager: ConnectionManager) -> None:
 
 
 def preview_data(df: pd.DataFrame, n: int = 5) -> pd.DataFrame:
-    """Return a sample of the data for quick inspection."""
+    """
+    Return the first `n` rows of the DataFrame for preview.
+    
+    Parameters:
+        n (int): Number of rows to return from the top of the DataFrame.
+    
+    Returns:
+        pd.DataFrame: A DataFrame containing the first `n` rows.
+    """
     return df.head(n)
 
 
