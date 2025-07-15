@@ -1,22 +1,4 @@
-"""Utilities for ingesting historical prices into a database."""
 
-from __future__ import annotations
-
-import pandas as pd
-from openbb import obb
-
-from .db_connections import ConnectionManager
-
-INSERT_SQL = """
-    INSERT INTO prices (symbol, date, open, high, low, close, volume)
-    VALUES (%s, %s, %s, %s, %s, %s, %s)
-    ON CONFLICT (symbol, date) DO UPDATE SET
-        open = EXCLUDED.open,
-        high = EXCLUDED.high,
-        low = EXCLUDED.low,
-        close = EXCLUDED.close,
-        volume = EXCLUDED.volume
-"""
 
 
 def fetch_equity(symbol: str, provider: str = "fmp") -> pd.DataFrame:

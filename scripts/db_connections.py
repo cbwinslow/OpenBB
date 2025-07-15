@@ -1,4 +1,4 @@
-"""Connection manager for SQLite and PostgreSQL."""
+
 
 import json
 import sqlite3
@@ -26,7 +26,7 @@ def load_config(name: str) -> dict:
         return json.load(f)
 
 
-class SQLiteConnectionManager:
+
     """Manage SQLite connections."""
 
     def __init__(self, config: Optional[dict] = None) -> None:
@@ -40,15 +40,3 @@ class SQLiteConnectionManager:
             conn.row_factory = sqlite3.Row
             yield conn
 
-
-def ConnectionManager(
-    config: Optional[dict] = None,
-) -> Union[SQLiteConnectionManager, PostgresConnectionManager]:
-    """Return a connection manager based on the config."""
-    config = config or {}
-    db_type = config.get("type", "sqlite")
-    if db_type == "sqlite":
-        return SQLiteConnectionManager(config)
-    if db_type == "postgres":
-        return PostgresConnectionManager(config)
-    raise ValueError(f"Unsupported database type: {db_type}")
