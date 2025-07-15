@@ -1,10 +1,12 @@
-"""SQLite connection manager used by scripts."""
+
 
 import json
 import sqlite3
 from contextlib import contextmanager
 from pathlib import Path
-from typing import Iterator, Optional
+from typing import Iterator, Optional, Union
+
+from .postgres_connection import PostgresConnectionManager
 
 CONFIG_DIR = Path(__file__).resolve().parent / "configs"
 CONFIG_DIR.mkdir(exist_ok=True)
@@ -24,7 +26,7 @@ def load_config(name: str) -> dict:
         return json.load(f)
 
 
-class ConnectionManager:
+
     """Manage SQLite connections."""
 
     def __init__(self, config: Optional[dict] = None) -> None:
@@ -37,3 +39,4 @@ class ConnectionManager:
         with sqlite3.connect(db_path) as conn:
             conn.row_factory = sqlite3.Row
             yield conn
+
