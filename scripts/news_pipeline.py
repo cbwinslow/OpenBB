@@ -15,19 +15,37 @@ INSERT_SQL = """
 
 
 def get_credentials() -> dict:
-    """Return stored credentials."""
+    """
+    Retrieve the stored user credentials as a JSON-compatible dictionary.
+    
+    Returns:
+        dict: User credentials in a format suitable for JSON serialization.
+    """
     return UserService().default_user_settings.credentials.model_dump(mode="json")
 
 
 def latest_news(limit: int = 10):
-    """Fetch latest news articles."""
+    """
+    Fetches the latest news articles from the BiztocWorldNewsFetcher API.
+    
+    Parameters:
+        limit (int): The maximum number of news articles to retrieve. Defaults to 10.
+    
+    Returns:
+        list: A list of news articles retrieved from the API.
+    """
     params = {"limit": limit}
     data = BiztocWorldNewsFetcher.fetch_data(params=params, credentials=get_credentials())
     return data
 
 
 def load_news(articles: list, conn_manager: ConnectionManager) -> None:
-    """Load news articles into the database."""
+    """
+    Insert a list of news articles into the database, skipping duplicates based on URL.
+    
+    Parameters:
+        articles (list): List of news article objects to be inserted.
+    """
     with conn_manager.context() as conn:
         cur = conn.cursor()
         for article in articles:
