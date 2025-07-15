@@ -2,9 +2,20 @@ import weaviate
 
 class WeaviateClient:
     def __init__(self, url="http://localhost:8080"):
+        """
+        Initialize a Weaviate client connected to the specified URL.
+        
+        Parameters:
+            url (str, optional): The URL of the Weaviate instance to connect to. Defaults to "http://localhost:8080".
+        """
         self.client = weaviate.Client(url)
 
     def create_schema(self):
+        """
+        Create a schema in Weaviate for storing news articles with predefined properties.
+        
+        Defines a "News" class in the Weaviate instance, specifying fields for title, summary, URL, source, and publication date, and sets the vectorizer to "text2vec-transformers".
+        """
         schema = {
             "classes": [
                 {
@@ -44,6 +55,12 @@ class WeaviateClient:
         self.client.schema.create(schema)
 
     def load_news(self, articles):
+        """
+        Batch imports a list of news articles into the "News" class in Weaviate.
+        
+        Parameters:
+            articles (list): A list of article objects, each with attributes for title, summary, url, source, and published_at.
+        """
         with self.client.batch as batch:
             for article in articles:
                 batch.add_data_object(

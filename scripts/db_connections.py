@@ -18,7 +18,18 @@ def list_config_files() -> list[Path]:
 
 
 def load_config(name: str) -> dict:
-    """Load a configuration file by name."""
+    """
+    Load and return the configuration dictionary from a JSON file with the given name.
+    
+    Parameters:
+        name (str): The base name of the configuration file (without extension).
+    
+    Returns:
+        dict: The configuration data loaded from the JSON file.
+    
+    Raises:
+        FileNotFoundError: If the specified configuration file does not exist.
+    """
     path = CONFIG_DIR / f"{name}.json"
     if not path.exists():
         raise FileNotFoundError(f"Config {name} not found")
@@ -30,10 +41,25 @@ class SQLiteConnectionManager:
     """Manage SQLite connections."""
 
     def __init__(self, config: Optional[dict] = None) -> None:
+        """
+        Initialize the SQLiteConnectionManager with an optional configuration dictionary.
+        
+        Parameters:
+            config (dict, optional): Configuration settings for the SQLite connection. If not provided, defaults to an empty dictionary.
+        """
         self.config = config or {}
 
     @contextmanager
     def context(self, config: Optional[dict] = None) -> Iterator[sqlite3.Connection]:
+        """
+        Context manager that yields a SQLite database connection using the specified configuration.
+        
+        Parameters:
+        	config (dict, optional): Configuration dictionary specifying the database file path under the "database" key. If not provided, the instance's configuration is used.
+        
+        Yields:
+        	sqlite3.Connection: An open SQLite connection with row factory set to return rows as dictionaries.
+        """
         cfg = config or self.config
         db_path = cfg.get("database", "openbb.db")
         with sqlite3.connect(db_path) as conn:
@@ -44,7 +70,20 @@ class SQLiteConnectionManager:
 def ConnectionManager(
     config: Optional[dict] = None,
 ) -> Union[SQLiteConnectionManager, PostgresConnectionManager]:
-    """Return a connection manager based on the config."""
+    """
+    Return a connection manager instance for SQLite or PostgreSQL based on the provided configuration.
+    
+    If the configuration specifies a `"type"` of `"sqlite"`, returns a `SQLiteConnectionManager`. If `"type"` is `"postgres"`, returns a `PostgresConnectionManager`. Raises a `ValueError` for unsupported database types.
+    
+    Parameters:
+        config (dict, optional): Configuration dictionary with a `"type"` key indicating the database type.
+    
+    Returns:
+        SQLiteConnectionManager or PostgresConnectionManager: An instance appropriate for the specified database type.
+    
+    Raises:
+        ValueError: If the database type specified in the config is not supported.
+    """
     config = config or {}
     db_type = config.get("type", "sqlite")
     if db_type == "sqlite":

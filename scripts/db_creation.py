@@ -84,7 +84,11 @@ CREATE TABLE IF NOT EXISTS prices (
 
 
 def create_tables(conn_manager: ConnectionManager) -> None:
-    """Create all tables in the database."""
+    """
+    Create all required tables in the PostgreSQL database using the provided connection manager.
+    
+    This function executes SQL statements to create the `rules`, `strategies`, `backtests`, `news`, `company_fundamentals`, `economic_data`, and `prices` tables if they do not already exist.
+    """
     with conn_manager.context() as conn:
         cur = conn.cursor()
         cur.execute(CREATE_RULES_SQL)
