@@ -24,7 +24,12 @@ EMBED_MODEL = os.getenv("EMBED_MODEL", "sentence-transformers/all-MiniLM-L6-v2")
 
 @router.post("/ingest")
 def ingest() -> dict:
-    """Ingest documents from the knowledge base directory."""
+    """
+    Splits documents from the knowledge base into chunks, adds them to the vector database, and returns the number of ingested chunks.
+    
+    Returns:
+        dict: A dictionary with the key "ingested" indicating the number of document chunks added to the vector database.
+    """
 
     splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
     chunks = splitter.split_documents(docs)
