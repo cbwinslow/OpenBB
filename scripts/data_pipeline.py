@@ -1,4 +1,3 @@
-from .db_connections import ConnectionManager
 
 
     data = obb.equity.price.historical(symbol=symbol, provider=provider)

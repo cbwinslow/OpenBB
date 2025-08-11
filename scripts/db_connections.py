@@ -46,23 +46,3 @@ class ConnectionManager:
     """Manage SQLite connections."""
 
 
-        self.config = config or {}
-
-    @contextmanager
-    def context(self, config: Optional[dict] = None) -> Iterator[sqlite3.Connection]:
-
-        """
-        Context manager that yields a SQLite connection using the specified or stored configuration.
-        
-        Parameters:
-        	config (dict, optional): Configuration dictionary containing the database path under the "database" key. If not provided, uses the instance's stored configuration.
-        
-        Yields:
-        	sqlite3.Connection: An open SQLite connection with row access by column name.
-        """
-        cfg = config or self.config
-        db_path = cfg.get("database", "openbb.db")
-        with sqlite3.connect(db_path) as conn:
-            conn.row_factory = sqlite3.Row
-            yield conn
-
