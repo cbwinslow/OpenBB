@@ -19,6 +19,12 @@ class PerformancePoint(BaseModel):
 @router.get("/performance", response_model=List[PerformancePoint])
 async def get_performance() -> List[PerformancePoint]:
 
+    """
+    Retrieve simulated portfolio performance data for the past 31 days.
+    
+    Returns:
+        List[PerformancePoint]: A list of performance data points, each containing a date (as a string) and a value starting at 10,000 and increasing by 10 for each subsequent day.
+    """
     today = date.today()
     data = [
         PerformancePoint(date=str(today - timedelta(days=i)), value=10000 + i * 10)
