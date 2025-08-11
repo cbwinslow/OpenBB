@@ -5,10 +5,11 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from openbb_core.api.app_loader import AppLoader
 from openbb_core.api.router.commands import router as router_commands
 from openbb_core.api.router.coverage import router as router_coverage
-from openbb_core.api.router.system import router as router_system
+
 from openbb_core.app.service.auth_service import AuthService
 from openbb_core.app.service.system_service import SystemService
 from openbb_core.env import Env
@@ -71,16 +72,17 @@ app.add_middleware(
     allow_methods=system.api_settings.cors.allow_methods,
     allow_headers=system.api_settings.cors.allow_headers,
 )
+app.mount("/", StaticFiles(directory="webapp", html=True), name="webapp")
 AppLoader.add_routers(
     app=app,
     routers=(
-        [AuthService().router, router_system, router_coverage, router_commands]
-        if Env().DEV_MODE
-        else (
-            [router_commands, router_coverage]
-            if hasattr(router_commands, "routes") and router_commands.routes
-            else [router_commands]
-        )
+        [
+            AuthService().router,
+            router_system,
+            router_coverage,
+            router_commands,
+            router_realtime,
+
     ),
     prefix=system.api_settings.prefix,
 )

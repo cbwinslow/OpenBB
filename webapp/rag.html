@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Knowledge Base Chat</title>
+  <script>
+    async function ingest() {
+
+    }
+    async function ask() {
+      const question = document.getElementById('question').value;
+      const res = await fetch('/rag/query', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({question})
+      });
+      const data = await res.json();
+      document.getElementById('answer').textContent = data.answer;
+    }
+  </script>
+</head>
+<body>
+  <h1>Knowledge Base Q&A</h1>
+  <button onclick="ingest()">Ingest Docs</button><br/>
+  <input id="question" placeholder="Ask a question" style="width:80%;" />
+  <button onclick="ask()">Ask</button>
+  <p id="status"></p>
+  <pre id="answer"></pre>
+</body>
+</html>

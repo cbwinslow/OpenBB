@@ -13,13 +13,21 @@
 The OpenBB Platform provides a convenient way to access raw financial data from multiple data providers. The package comes with a ready to use REST API - this allows developers from any language to easily create applications on top of OpenBB Platform.
 
 Please find the complete documentation at [docs.openbb.co](https://docs.openbb.co/platform).
+The latest stable release is available on PyPI as `openbb`.
 
+Contributions are welcome via [CONTRIBUTING.md](CONTRIBUTING.md).
 ## Installation
 
 The command below provides access to the core functionalities behind the OpenBB Platform.
 
 ```bash
 pip install openbb
+```
+Example usage:
+
+```python
+from openbb import openbb
+openbb.stocks.load("AAPL")
 ```
 
 This will install the following data providers:

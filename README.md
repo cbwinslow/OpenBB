@@ -19,6 +19,8 @@ The first financial Platform that is free and fully open source.
 
 The OpenBB Platform offers access to equity, options, crypto, forex, macro economy, fixed income, and more while also offering a broad range of extensions to enhance the user experience according to their needs.
 
+This project is distributed under the AGPLv3 license. See [LICENSE](LICENSE) for details.
+
 Sign up to the [OpenBB Hub](https://my.openbb.co/login) to get the most out of the OpenBB ecosystem.
 
 ---
@@ -32,6 +34,8 @@ If you are looking for our **FREE** AI-powered Research and Analytics Workspace,
 </a>
 
 We also have an open source AI financial analyst agent that can access all of the data within OpenBB, and that repo can be found [here](https://github.com/OpenBB-finance/openbb-agents).
+
+The platform now includes a simple Knowledge Base with Retrieval-Augmented Generation (RAG) capabilities.  Documents can be ingested via `/rag/ingest` and queried using `/rag/query`.  A minimal web interface is available at [`rag.html`](webapp/rag.html).
 
 ---
 
@@ -66,6 +70,10 @@ It can be installed by running `pip install openbb-cli`
 or by cloning the repository directly with  `git clone https://github.com/OpenBB-finance/OpenBB.git`.
 
 Please find more about the installation process in the [OpenBB Documentation](https://docs.openbb.co/cli/installation).
+
+### Quick Start Example
+
+After installation, run `openbb --help` to see available commands.
 
 ## 2. Contributing
 
