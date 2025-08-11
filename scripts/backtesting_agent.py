@@ -25,13 +25,7 @@ def run_strategy_backtest(
     conn_manager: ConnectionManager,
 ) -> dict:
     """
-    Executes a backtest for the specified strategy using provided price data and records the result in the database.
-    
-    Raises:
-        ValueError: If the strategy with the given ID does not exist.
-    
-    Returns:
-        dict: The result of the backtest, including the calculated return.
+
     """
     strategies = {s["id"]: s for s in list_strategies(conn_manager)}
     strategy = strategies.get(strategy_id)

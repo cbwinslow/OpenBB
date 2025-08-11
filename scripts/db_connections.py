@@ -30,14 +30,3 @@ class ConnectionManager:
     """Manage SQLite connections."""
 
 
-        self.config = config or {}
-
-    @contextmanager
-    def context(self, config: Optional[dict] = None) -> Iterator[sqlite3.Connection]:
-
-        cfg = config or self.config
-        db_path = cfg.get("database", "openbb.db")
-        with sqlite3.connect(db_path) as conn:
-            conn.row_factory = sqlite3.Row
-            yield conn
-
