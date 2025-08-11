@@ -22,6 +22,11 @@ initialize_db(cm)
 
 
 def tab_data():
+    """
+    Displays the interface for fetching price data, visualizing it, and running backtests.
+    
+    Allows users to input a stock symbol and data provider, fetch and plot historical price data, select a trading strategy, and run a backtest on the fetched data. Backtest results are displayed upon completion.
+    """
     st.header("Price Data & Backtesting")
     symbol = st.text_input("Symbol", "AAPL")
     provider = st.text_input("Provider", "fmp")
@@ -38,6 +43,11 @@ def tab_data():
 
 
 def tab_rules():
+    """
+    Displays the interface for managing trading rules, allowing users to add new rules and view existing ones.
+    
+    Prompts the user to input a rule name and definition, adds the rule to the database when submitted, and lists all current rules.
+    """
     st.header("Manage Trading Rules")
     name = st.text_input("Rule Name")
     definition = st.text_area("Definition")
@@ -49,6 +59,11 @@ def tab_rules():
 
 
 def tab_strategies():
+    """
+    Displays the interface for creating and managing trading strategies.
+    
+    Allows users to input a strategy name, select associated rules, and add new strategies to the database. Existing strategies are listed along with their associated rule names.
+    """
     st.header("Strategies")
     strategies = list_strategies(cm)
     rules = list_rules(cm)
@@ -64,6 +79,11 @@ def tab_strategies():
 
 
 def tab_results():
+    """
+    Displays a list of all backtest results in the Streamlit interface.
+    
+    Each backtest record retrieved from the database is shown in the results section.
+    """
     st.header("Backtest Results")
     for record in list_backtests(cm):
         st.write(record)
