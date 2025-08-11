@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Portfolio Tracker</title>
+  <style>
+    body { font-family: Arial, sans-serif; }
+    #chart { width:100%; height:400px; }
+    table { border-collapse: collapse; width:100%; margin-top:10px; }
+    th, td { border:1px solid #ccc; padding:4px; }
+    th { background:#f0f0f0; }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    async function loadPortfolio() {
+      const res = await fetch('/portfolio/performance');
+      const data = await res.json();
+      const ctx = document.getElementById('chart').getContext('2d');
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: data.map(d => d.date),
+          datasets: [{ label: 'Portfolio Value', data: data.map(d => d.value), borderColor: '#003366' }]
+        }
+      });
+      const tbody = document.getElementById('rows');
+      data.forEach(d => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${d.date}</td><td>${d.value.toFixed(2)}</td>`;
+        tbody.appendChild(tr);
+      });
+    }
+    window.onload = loadPortfolio;
+  </script>
+</head>
+<body>
+  <h1>Portfolio Performance</h1>
+  <canvas id="chart"></canvas>
+  <table>
+    <thead><tr><th>Date</th><th>Value</th></tr></thead>
+    <tbody id="rows"></tbody>
+  </table>
+</body>
+</html>

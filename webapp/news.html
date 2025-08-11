@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>News Wire Aggregator</title>
+  <style>
+    body { font-family: Arial, sans-serif; }
+    #news-list { width: 100%; border-collapse: collapse; }
+    #news-list th, #news-list td { border: 1px solid #ccc; padding: 4px; }
+    #news-list th { background-color: #f0f0f0; }
+    #news-list td.title { width: 70%; }
+  </style>
+  <script>
+    async function fetchNews() {
+      try {
+        const res = await fetch('/news/latest?limit=20');
+        if (!res.ok) {
+          throw new Error(`Failed to fetch news: ${res.status} ${res.statusText}`);
+        }
+        const data = await res.json();
+        const tbody = document.getElementById('news-body');
+        tbody.innerHTML = '';
+        data.forEach(item => {
+          const row = document.createElement('tr');
+          const title = document.createElement('td');
+          title.className = 'title';
+          title.textContent = item.title;
+          const info = document.createElement('td');
+          info.textContent = `${item.source || ''} ${item.author || ''}`.trim();
+          row.appendChild(title);
+          row.appendChild(info);
+          tbody.appendChild(row);
+        });
+      } catch (error) {
+        const tbody = document.getElementById('news-body');
+        tbody.innerHTML = '<tr><td colspan="2">Failed to load news. Please try again later.</td></tr>';
+        console.error('Error fetching news:', error);
+      }
+    }
+
+    setInterval(fetchNews, 60000);
+    window.onload = fetchNews;
+  </script>
+</head>
+<body>
+  <h1>News Wire Aggregator</h1>
+  <table id="news-list">
+    <thead>
+      <tr><th>Headline</th><th>Source / Journalist</th></tr>
+    </thead>
+    <tbody id="news-body"></tbody>
+  </table>
+</body>
+</html>

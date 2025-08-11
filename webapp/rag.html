@@ -5,14 +5,7 @@
   <title>Knowledge Base Chat</title>
   <script>
     async function ingest() {
-      try {
-        const res = await fetch('/rag/ingest', {method: 'POST'});
-        const data = await res.json();
-        document.getElementById('status').textContent = JSON.stringify(data);
-      } catch (error) {
-        console.error('Error during ingestion:', error);
-        document.getElementById('status').textContent = 'Failed to ingest documents. Please try again.';
-      }
+
     }
     async function ask() {
       const question = document.getElementById('question').value;
