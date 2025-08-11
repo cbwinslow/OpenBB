@@ -42,7 +42,7 @@ def query_rag(q: Query) -> dict:
     Retrieve relevant information from the knowledge base in response to a user question.
     
     Parameters:
-    	q (Query): The query object containing the user's question.
+        q (Query): The query object containing the user's question.
     
     Returns:
     	dict: A dictionary with the concatenated answer from the top three relevant documents and the total number of retrieved source documents.
