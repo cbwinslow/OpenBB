@@ -105,6 +105,20 @@ date                                ...
 [5 rows x 12 columns]
 ```
 
+## Trading Utilities
+
+The platform now ships with basic tools for discovering arbitrage opportunities and backtesting trading strategies.
+
+```python
+from openbb_core.trading import find_arbitrage, Backtester, BuyAndHoldStrategy
+
+opportunity = find_arbitrage(100, {"inst_a": 40, "inst_b": 30})
+
+prices = [100, 110, 105]
+backtester = Backtester(prices, BuyAndHoldStrategy())
+performance = backtester.run()
+```
+
 ## API keys
 
 To fully leverage the OpenBB Platform you need to get some API keys to connect with data providers. Here are the 3 options on where to set them:
