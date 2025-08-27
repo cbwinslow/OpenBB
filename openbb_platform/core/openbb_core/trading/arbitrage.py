@@ -27,19 +27,31 @@ def recreate_position(instruments: Dict[str, float]) -> float:
 
 
 def find_arbitrage(target_price: float, instruments: Dict[str, float]) -> Dict[str, float] | None:
-    """Identify arbitrage relative to the target price.
-
+    """
+    Identify a simple arbitrage opportunity by comparing the target market price to the cost of a synthetic replication.
+    
+    Compute the replication cost via recreate_position(instruments) and:
+    - return None when replication cost equals target price (no arbitrage),
+    - return {"action": "buy_replication_sell_target", "profit": target_price - replication_cost}
+      when the replication is cheaper than the target (sell target, buy replication),
+    - return {"action": "buy_target_sell_replication", "profit": replication_cost - target_price}
+      when the replication is more expensive than the target (buy target, sell replication).
+    
     Parameters
     ----------
     target_price : float
         Market price of the target instrument.
     instruments : Dict[str, float]
-        Instruments used to recreate the target.
-
+        Mapping of instrument names to their prices used to recreate the target.
+        Negative values may represent short positions and are included in the replication cost.
+    
     Returns
     -------
     Dict[str, float] | None
-        Information about the arbitrage trade if one exists, otherwise ``None``.
+        A dictionary with keys:
+          - "action": a string describing the trade to capture the arbitrage,
+          - "profit": the positive monetary profit per unit from executing the trade;
+        or None if no arbitrage exists (replication cost equals target price).
     """
     replication_cost = recreate_position(instruments)
     if replication_cost == target_price:
