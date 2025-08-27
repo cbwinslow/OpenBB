@@ -31,6 +31,20 @@ async def get_latest_news(
     _: None = Depends(auth_hook),
 ) -> List[dict]:
 
+    """
+    Retrieve the latest news articles with optional filtering and caching.
+    
+    Parameters:
+        term (str, optional): Keyword to filter news articles by content.
+        source (str, optional): Source to filter news articles.
+        limit (int, optional): Maximum number of articles to return. Defaults to 10.
+    
+    Returns:
+        List[dict]: A list of news articles as dictionaries, filtered and limited according to the query parameters.
+    
+    Raises:
+        HTTPException: If an error occurs while fetching news data.
+    """
     key = f"{term}-{source}-{limit}"
     ts, cached = _cache.get(key, (0.0, []))
     if time.time() - ts < 300 and cached:
