@@ -26,28 +26,7 @@ def recreate_position(instruments: Dict[str, float]) -> float:
     return sum(instruments.values())
 
 
- def find_arbitrage(
-     target_price: float,
-     instruments: Dict[str, float],
-     tol: float = 1e-9,
- ) -> ArbitrageResult | None:
-     """Identify arbitrage relative to the target price.
 
-     Parameters
-     ----------
-     target_price : float
-         Market price of the target instrument.
-     instruments : Dict[str, float]
-         Instruments used to recreate the target.
-
-     Returns
-     -------
-     Dict[str, float] | None
-         Information about the arbitrage trade if one exists, otherwise ``None``.
-     """
--    replication_cost = recreate_position(instruments)
-    if not math.isfinite(target_price):
-        raise ValueError("target_price must be a finite number")
     replication_cost = recreate_position(instruments)
     if math.isclose(replication_cost, target_price, rel_tol=tol, abs_tol=tol):
          return None
